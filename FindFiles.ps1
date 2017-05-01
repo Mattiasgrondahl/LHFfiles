@@ -88,9 +88,9 @@ sleep 2
 ###
 
 #Get Drives
+Write-Host "Detecting Drives" -ForegroundColor DarkYellow
 $drive = get-psdrive -PSProvider filesystem | select Root, @{Name="UsedGB";Expression={[math]::round($_.used/1gb,2)}}, @{Name="FreeGB";Expression={[math]::round($_.free/1gb,2)}}, @{Name="PctFree";expression={$_.free/($_.free+$_.used)*100 –as [int]}}
 $drive
-sleep 1
 
 #Suppress Errors (set to Continue to show errors on run)
 $ErrorActionPreference = "SilentlyContinue"
@@ -101,15 +101,18 @@ New-Item Output\Errors.log -type file
 ForEach ($line in $extentions) {
 $content = Get-ChildItem -Path $path -Filter *.$line -Recurse -Exclude $Exclutions
 $count = $content.Count
+$number = ($count.ToString("####")).PadLeft(6)
 
 try {
-if ($content -ne $null) {
-write-host "$count files found for .$line  Exporting to $pwd\output\$line"_files".csv" -foregroundcolor "green"
+if ($content -ne $null) { 
+#write-host "Count: | FileType           | Export Path" -foregroundcolor "green"
+write-host "$number | .$line files found. | $pwd\output\$line"_files".csv" -foregroundcolor "green"
 $content.VersionInfo |select Filename | Export-Csv -Path $pwd\output\$line"_files".csv
 sleep 1
 }    
 else {
-Write-host "0 files found for filetype .$line" -foregroundcolor "magenta"
+write-host "$number | .$line files found. | $pwd\output\$line"_files".csv" -foregroundcolor "magenta"
+#Write-host "0 files found for filetype .$line" -foregroundcolor "magenta"
 sleep 1
 }
 
@@ -130,4 +133,4 @@ Catch
 #Error logging
 Add-content Output\Errors.log "$Error `r`n"
 $ErrorCount = $Error.Count
-Write-host "$ErrorCount Errors found and logged in Output\Errors.log"
+Write-host "$ErrorCount Errors found and logged in Output\Errors.log" -ForegroundColor Red
