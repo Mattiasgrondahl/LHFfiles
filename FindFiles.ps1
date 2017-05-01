@@ -33,20 +33,25 @@ sleep 1
 }
 
 ForEach ($line in $extentions) {
-Write-Host $line    
-$content = Get-ChildItem -Path $searchpath -Filter *.$line -Recurse     
-if ($content -ne $null)    {       
-write-host "Found $line files, exporting to csv"       
-$content.VersionInfo |select Filename | Export-Csv -Path $path\output\$line"_files".csv       
-sleep 1    }    
-else {    
-Write-host "Found no $line files."    
-sleep 1    }    }
-$output_list = Get-ChildItem $path\Output$output_list
+Write-Host $line
+$content = Get-ChildItem -Path $searchpath -Filter *.$line -Recurse
+if ($content -ne $null) {
+write-host "Found $line files, exporting to csv"
+$content.VersionInfo |select Filename | Export-Csv -Path $path\output\$line"_files".csv
+sleep 1
+}    
+else {
+Write-host "Found no $line files."
+sleep 1
+}
+}
+$output_list = Get-ChildItem $path\Output $output_list
 
-#ToDO#Filter README.txt and others
+#ToDO
+#Filter README.txt and others
 
-#Later#Get-Content to read in files for each file
+#Later
+#Get-Content to read in files for each file
 #one file#$file = Get-ChildItem H:\servers.txt#$file.VersionInfo |select Filename
 #show line number#Select-String .\servers.txt -Pattern brons |select LineNumber, Line |fl
 #Search registry #ls 'HKLM:\SOFTWARE\Microsft\' -Recurse |findstr Version
