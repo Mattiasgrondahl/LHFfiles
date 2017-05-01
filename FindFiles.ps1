@@ -73,7 +73,7 @@ sleep 1
 Else {
 Write-host "File doesn't exsists creating default config"
 New-Item Output -type Directory
-New-Item Output\Extentions.txt -type file
+New-Item Extentions.txt -type file
 Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg`r`nconfig`r`nsql`r`nmsg"
 }
 
@@ -95,7 +95,7 @@ $drive
 #Suppress Errors (set to Continue to show errors on run)
 $ErrorActionPreference = "SilentlyContinue"
 $Error.count
-New-Item Output\Errors.log -type file
+New-Item Errors.log -type file
 
 #ForEach loop starts here
 ForEach ($line in $extentions) {
@@ -106,8 +106,8 @@ $number = ($count.ToString("####")).PadLeft(6)
 try {
 if ($content -ne $null) { 
 #write-host "Count: | FileType           | Export Path" -foregroundcolor "green"
-write-host "$number | .$line files found. | $pwd\output\$line"_files".csv" -foregroundcolor "green"
-$content.VersionInfo |select Filename | Export-Csv -Path $pwd\output\$line"_files".csv
+write-host "$number | .$line files found. | $path\output\$line"_files".csv" -foregroundcolor "green"
+$content.VersionInfo |select Filename | Export-Csv -Path $path\output\$line"_files".csv
 sleep 1
 }    
 else {
@@ -131,6 +131,6 @@ Catch
 }
 
 #Error logging
-Add-content Output\Errors.log "$Error `r`n"
+Add-content Errors.log "$Error `r`n"
 $ErrorCount = $Error.Count
 Write-host "$ErrorCount Errors found and logged in Output\Errors.log" -ForegroundColor Red
