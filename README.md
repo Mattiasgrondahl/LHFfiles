@@ -6,7 +6,7 @@ Findfiles.ps1 will search through a mapped drive for files that might contain pa
 
 Findcontent will seach through each txt file in the CSV and look for ip, url, passwords etc.
 
-##Getting Started
+## Getting Started
 
 1. Make sure you are on a Win7-10 machine (32 or 64bit).
 2. You must be running a current version of PowerShell (v5+).
