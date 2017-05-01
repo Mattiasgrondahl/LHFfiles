@@ -1,32 +1,32 @@
-<#
+<#
 
 .SYNOPSIS
 Find specific conent in TEXT files
 
-.DESCRIPTION    
+.DESCRIPTION
 
 Performs the following task
     - Get CSV of files
     - Seach through TXT files for content
     - Export content to text file
             
-.NOTES    
+.NOTES
 
 Requires Findfiles.ps1 script to be run prior to this script.
 
-        Author: Mattias Gröndahl    Date  : April 30, 2017   
+        Author: Mattias Gröndahl  Date  : April 30, 2017   
 
 Checks the following.
     -
 
-.EXAMPLE    
+.EXAMPLE 
 
 .\FindContent.ps1 
 
 #>
 
 ### Parameters
-$path = pwd
+$path = pwd
 $listoffiles = Get-Content -Path "$path\output\txt_files.csv"
 $output_file = "$path\GDPR_all.txt"
 
@@ -43,7 +43,7 @@ $Password = ''
 ForEach ($line in $listoffiles){    
 Write-Host $line    
 #trim UNC path    
-$input_path = $line -replace '["]',''    
+$input_path = $line -replace '["]',''
 
 #Todo
 #Fix first 2 lines in CSV
