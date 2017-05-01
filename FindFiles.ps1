@@ -1,36 +1,38 @@
 
-$path = pwd
-$searchpath = Read-Host "Skriv path att söka på ex H:\"
+$path = pwd
+$searchpath = Read-Host "Skriv path att söka på ex H:\"
 
 #Get-ChildItem -Path U:\ -Filter *password* -Recurse | Out-GridView
 #Get-ChildItem -Path U:\ -Filter *password* -Recurse | Where-Object { $_.Attributes
 
 $result = Get-ChildItem -Filter *s* -Recurse | Where-Object {$_.Attributes -eq "Archive, Compressed"}
-
-$msg = "`nScript will search for the following file types: `r`n $files `r`n in the path $searchpath `n"
-if (Test-Path "$path\Extentions.txt") {    
-Write-host "File exsists"    
-$files = Get-Content -Path "$path\Extentions.txt"        
-Write-host "$msg"        
-sleep 1 
-}    
-Else {    
-Write-host "File doesn't exsists creating default file"        
 
-New-Item Output\Extentions.txt -type file   
-Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg"    
+$msg = "`nScript will search for the following file types: `r`n $files `r`n in the path $searchpath `n"
+if (Test-Path "$path\Extentions.txt") {
+Write-host "File exsists"
+$files = Get-Content -Path "$path\Extentions.txt" 
+Write-host "$msg"
+sleep 1
+}
+Else {
+Write-host "File doesn't exsists creating default file"
+
+New-Item Output\Extentions.txt -type file
+Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg"
 }
 
 $extentions = Get-Content -Path "Extentions.txt" 
-if (Test-Path "$path\Output") {    
-sleep 1   
-Write-Host "folder Exsists"    }    
-else {    
-Write-Host "Creating Folder"   
-New-Item Output -type Directory   
-sleep 1    }
+if (Test-Path "$path\Output") {
+sleep 1
+Write-Host "folder Exsists" 
+}
+else {
+Write-Host "Creating Folder"
+New-Item Output -type Directory
+sleep 1
+}
 
-ForEach ($line in $extentions){   
+ForEach ($line in $extentions) {
 Write-Host $line    
 $content = Get-ChildItem -Path $searchpath -Filter *.$line -Recurse     
 if ($content -ne $null)    {       
