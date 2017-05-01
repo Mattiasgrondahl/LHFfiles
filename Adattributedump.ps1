@@ -68,20 +68,22 @@ $Properties = @('DisplayName',
                     'description',
                     'LastLogonTimestamp')
 
-$date = 131258506728410260
-function formatdate {[datetime]::FromFileTime($date).ToString('d MMMM yyy')
-write-host "test"
-}formatdate
+$date = 131258506728410260
+function formatdate {
+[datetime]::FromFileTime($date).ToString('d MMMM yyy')
+write-host "test"
+}
+formatdate
 
-#get users and attributes
-$Users = Get-ADUser -Filter * -SearchBase "Ou=test,DC=test,OU=local" -Properties $Properties | sort -Property LastLogonDate -Descending
+#get users and attributes
+#$Users = Get-ADUser -Filter * -SearchBase "Ou=test,DC=test,OU=local" -Properties $Properties | sort -Property LastLogonDate -Descending
 #Get enabled Aduser and the last login time
-$Last_users = Get-Aduser -Filter {Enabled -eq $true} -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}} | sort -Property LastLogon -Descending$i = 0$count = 0
+$Last_users = Get-Aduser -Filter {Enabled -eq $true} -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}} | sort -Property LastLogon -Descending $i = 0 $count = 0
 
 foreach($User in $Last_users) {
             try {
             #Write-host "Getting LastLogonTime for user: " $User ´n
-            Get-Aduser $user -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}} 
+            Get-Aduser $user -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}}
             $count = $i++
             }
             
