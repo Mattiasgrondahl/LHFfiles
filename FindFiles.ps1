@@ -112,7 +112,7 @@ try {
 if ($content -ne $null) { 
 #write-host "Count: | FileType           | Export Path" -foregroundcolor "green"
 write-host "$number | .$line files found. | $path\Output\$line"_files".csv" -foregroundcolor "green"
-$content.VersionInfo |select Filename | Export-Csv -Path $path\output\$line"_files".csv
+$content.VersionInfo |select Filename | Export-Csv -Path $path\Output\$line"_files".csv
 sleep 1
 }    
 else {
@@ -136,6 +136,6 @@ Catch
 }
 
 #Error logging
-Add-content Errors.log "$Error `r`n"
+Add-content Output\Errors.log "$Error `r`n"
 $ErrorCount = $Error.Count
 Write-host "$ErrorCount Errors found and logged in Output\Errors.log" -ForegroundColor Red
