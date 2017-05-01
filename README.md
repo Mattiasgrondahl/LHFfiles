@@ -1,4 +1,4 @@
-# LHFfiles
+# Low Hanging Fruit 
 Low Hanging Fruit - A Collection of script to make a pentesters life easier.
 This is a work in progress and some stuff might now work.
 
