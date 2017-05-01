@@ -78,20 +78,20 @@ $Users = Get-ADUser -Filter * -SearchBase "Ou=test,DC=test,OU=local" -Properties
 #Get enabled Aduser and the last login time
 $Last_users = Get-Aduser -Filter {Enabled -eq $true} -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}} | sort -Property LastLogon -Descending$i = 0$count = 0
 
-foreach($User in $Last_users){
-            try            {
-             #Write-host "Getting LastLogonTime for user: " $User ´n
+foreach($User in $Last_users) {
+            try {
+            #Write-host "Getting LastLogonTime for user: " $User ´n
+            Get-Aduser $user -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}} 
+            $count = $i++
+            }
+            
+            catch {
+            write-host "error"
+            }
 
-    Get-Aduser $user -Properties Name, LastLogon | Select-Object Name, @{n='LastLogon';e={[DateTime]::FromFileTime($_.LastLogon)}} 
-    $count = $i++    
-    }           
-    catch {
-    write-host "error"   
-    
-    finally{                
-    
-    #Write-host "Done proccessing user"   
-                     }
+            finally {        
+            #Write-host "Done proccessing user"
+            }
 }
 
 Write-Host "Here follows a list of last logged in users:" ´n sleep 2$Last_usersWrite-host Number of users = $count
