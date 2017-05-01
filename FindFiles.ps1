@@ -91,14 +91,19 @@ sleep 2
 Write-Host "Detecting Drives" -ForegroundColor DarkYellow
 $drive = get-psdrive -PSProvider filesystem | select Root, @{Name="UsedGB";Expression={[math]::round($_.used/1gb,2)}}, @{Name="FreeGB";Expression={[math]::round($_.free/1gb,2)}}, @{Name="PctFree";expression={$_.free/($_.free+$_.used)*100 –as [int]}}
 $drive
+sleep 1
 
 #Suppress Errors (set to Continue to show errors on run)
 $ErrorActionPreference = "SilentlyContinue"
 $Error.count
 New-Item Errors.log -type file
 
+#Define extentions
+$Extentions = Get-Content -Path "$path\Extentions.txt" 
+
 #ForEach loop starts here
-ForEach ($line in $extentions) {
+ForEach ($line in $Extentions) {
+
 $content = Get-ChildItem -Path $path -Filter *.$line -Recurse -Exclude $Exclutions
 $count = $content.Count
 $number = ($count.ToString("####")).PadLeft(6)
@@ -106,12 +111,12 @@ $number = ($count.ToString("####")).PadLeft(6)
 try {
 if ($content -ne $null) { 
 #write-host "Count: | FileType           | Export Path" -foregroundcolor "green"
-write-host "$number | .$line files found. | $path\output\$line"_files".csv" -foregroundcolor "green"
+write-host "$number | .$line files found. | $path\Output\$line"_files".csv" -foregroundcolor "green"
 $content.VersionInfo |select Filename | Export-Csv -Path $path\output\$line"_files".csv
 sleep 1
 }    
 else {
-write-host "$number | .$line files found. | $pwd\output\$line"_files".csv" -foregroundcolor "magenta"
+write-host "$number | .$line files found. | $pwd\Output\$line"_files".csv" -foregroundcolor "magenta"
 #Write-host "0 files found for filetype .$line" -foregroundcolor "magenta"
 sleep 1
 }
