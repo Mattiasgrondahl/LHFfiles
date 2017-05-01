@@ -1,6 +1,33 @@
+<#
+
+.SYNOPSIS
+Find files with specifik file extentions
+
+.DESCRIPTION
+
+Performs the following task
+    - Search through a Drive for files
+    - Exports to CSV
+    
+            
+.NOTES
+
+        Author: Mattias Gröndahl  Date  : April 30, 2017   
+
+Checks the following.
+    -
+
+.EXAMPLE 
+
+.\FindContent.ps1 
+
+#>
+
+### Parameters
+
 
 $path = pwd
-$searchpath = Read-Host "Skriv path att sÃ¶ka pÃ¥ ex H:\"
+$searchpath = Read-Host "Skriv path att söka på ex H:\"
 
 #Get-ChildItem -Path U:\ -Filter *password* -Recurse | Out-GridView
 #Get-ChildItem -Path U:\ -Filter *password* -Recurse | Where-Object { $_.Attributes
