@@ -65,20 +65,20 @@ else {
 }
 
 #Create Extentions list
-if (Test-Path "$pwd\Extentions.txt") {
-$files = Get-Content -Path "$pwd\Extentions.txt" 
+if (Test-Path "$path\Extentions.txt") {
+$files = Get-Content -Path "$path\Extentions.txt" 
 #Write-host "$msg" -foregroundcolor "green"
 sleep 1
 }
 Else {
 Write-host "File doesn't exsists creating default config"
-New-Item Output -type Directory "$pwd\Output"
+New-Item Output -type Directory
 New-Item Output\Extentions.txt -type file
 Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg`r`nconfig`r`nsql`r`nmsg"
 }
 
 #Display Confguration
-$conf = "PATH = $path`r`nExlude = $exclude`r`nFileTypes = $files`r`n"
+$conf = "PATH = $path`r`nExlude = $exclude`r`nFileTypes = $files`r`nErrorLog = Error.log`r`n"
 Write-host "#################" -ForegroundColor DarkYellow
 Write-host "# Configuration #" -ForegroundColor DarkYellow
 Write-host "#################" -ForegroundColor DarkYellow
