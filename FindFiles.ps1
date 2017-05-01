@@ -18,7 +18,7 @@ Else {
 Write-host "File doesn't exsists creating default file"
 
 New-Item Output\Extentions.txt -type file
-Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg"
+Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg`r`nconfig`r`nsql"
 }
 
 $extentions = Get-Content -Path "Extentions.txt" 
