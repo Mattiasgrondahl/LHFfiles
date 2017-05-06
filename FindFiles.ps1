@@ -27,7 +27,8 @@ Checks the following.
 
 .EXAMPLE 
 
-.\FindFiles.ps1 -path C:\temp -exclude "*version* *readme*"
+.\FindFiles.ps1 -path C:\temp -output C:\temp\output -exclude "*version* *readme*"
+.\FindFiles.ps1 -listdrives
 .\FindContent.ps1 
 
 #>
@@ -40,87 +41,123 @@ Param(
    [string]$path,
 	
    [Parameter(Mandatory=$False,Position=2)]
-   [string]$exclude
+   [string]$output,
+
+   [Parameter(Mandatory=$False,Position=3)]
+   [string]$exclude,
+
+   [Parameter(Mandatory=$False,Position=4)]
+   [string]$list
 )
 
-$pwd = pwd
+#Define Help Function
+Function Help{
+Write-host '#############################################################################################################' -ForegroundColor DarkYellow
+Write-host '#                                                                                                           #' -ForegroundColor DarkYellow
+Write-host '# Example: .\FindFiles.ps1 -path C:\temp -output C:\temp\output -exclude "*version* *readme*"display help"  #' -ForegroundColor DarkYellow
+Write-host '#                                                                                                           #' -ForegroundColor DarkYellow
+Write-host '#############################################################################################################' -ForegroundColor DarkYellow
+}
 
+#Show Help
+Help
+
+#Define Array with filetypes
+$Files_array = @("txt",
+                     "bak",
+                     "one",
+                     "key",
+                     "sh",
+                     "bat",
+                     "cmd",
+                     "ps1",
+                     "doc",
+                     "docx",
+                     "vhd",
+                     "rdg",
+                     "config",
+                     "sql",
+                     "msg",
+                     "xml",
+                     "csv",
+                     "bkf")
+
+#If -list drives
+if ($list -eq "drives") {
+#Get Drives
+Write-Host "Detecting Drives" -ForegroundColor DarkYellow
+$drive = get-psdrive -PSProvider filesystem | select Root, @{Name="UsedGB";Expression={[math]::round($_.used/1gb,2)}}, @{Name="FreeGB";Expression={[math]::round($_.free/1gb,2)}}, @{Name="PctFree";expression={$_.free/($_.free+$_.used)*100 –as [int]}} -Wait
+sleep 3
+Write-host $drive.Count "drives found"
+$drive
+}
+
+if ( $list -eq "drives") { exit }
+
+#If no -path
 if ($path -eq "") {
 #$path = Read-Host "Enter the Root to search:"
-Write-host "No Path defined, using current directory $pwd" -ForegroundColor DarkYellow
-#set path to current directory
-$path = $pwd
-}
-else {
-Write-host "Using Path: $path" -ForegroundColor DarkYellow
+Write-host "No path defined entering interactive mode."
+$path = Read-host "Enter path"
 }
 
 #Exclude the following files
 if ($exclude -eq "") {
     $exclude = @("*readme*", "*EULA*", "*Version*", "*Manifest*")
-    Write-host "No Exclution defined, using default config: $exclude" -ForegroundColor DarkYellow
+    Write-host "No Exclution defined, using default yconfig: $exclude" -ForegroundColor DarkYellow
 }
 else {
     Write-host "Excluding $Exlutions" -ForegroundColor DarkYellow
 }
 
-#Create Extentions list
-if (Test-Path "$path\Extentions.txt") {
-$files = Get-Content -Path "$path\Extentions.txt" 
-#Write-host "$msg" -foregroundcolor "green"
-sleep 1
-}
-Else {
-Write-host "File doesn't exsists creating default config"
-New-Item Output -type Directory
-New-Item Extentions.txt -type file
-Add-content Extentions.txt "txt`r`nbak`r`ndoc`r`ndocx`r`none`r`nkey`r`nvhd`r`nsh`r`nbat`r`ncmd`r`nps1`r`nrdg`r`nconfig`r`nsql`r`nmsg"
+##If no -output
+if ($output -eq "") {
+Write-host "No output path defined!"
+$output = Read-host "Enter output path"
 }
 
 #Display Confguration
-$conf = "PATH = $path`r`nExlude = $exclude`r`nFileTypes = $files`r`nErrorLog = Error.log`r`n"
-Write-host "#################" -ForegroundColor DarkYellow
-Write-host "# Configuration #" -ForegroundColor DarkYellow
-Write-host "#################" -ForegroundColor DarkYellow
+$conf = " -path       = $path`r`n -output     = $output`r`n -exlude     = $exclude`r`n`r`nFileTypes = $Files_array`r`nErrorLog  = $output\Error.log`r`n"
+Write-host "###################################################" -ForegroundColor DarkYellow
+Write-host "#                                                 #" -ForegroundColor DarkYellow
+Write-host "#                   Configuration                 #" -ForegroundColor DarkYellow
+Write-host "#                                                 #" -ForegroundColor DarkYellow
+Write-host "###################################################" -ForegroundColor DarkYellow
 Write-host $conf -ForegroundColor Magent
 sleep 2
 
-###
+#Confirm config
+$confirm = Read-host "Do you want to continue with the current configuration Y/N"
+    if ( $confirm -ne "Y" ) { exit }
 
-#Get Drives
-Write-Host "Detecting Drives" -ForegroundColor DarkYellow
-$drive = get-psdrive -PSProvider filesystem | select Root, @{Name="UsedGB";Expression={[math]::round($_.used/1gb,2)}}, @{Name="FreeGB";Expression={[math]::round($_.free/1gb,2)}}, @{Name="PctFree";expression={$_.free/($_.free+$_.used)*100 –as [int]}}
-$drive
-sleep 1
+#Create Output folder
+if (Test-Path $output) {
+}
+Else {
+New-Item $output -type Directory
+Write-host "Created folder $output"
+}
 
 #Suppress Errors (set to Continue to show errors on run)
 $ErrorActionPreference = "SilentlyContinue"
 $Error.count
 New-Item Errors.log -type file
 
-#Define extentions
-$Extentions = Get-Content -Path "$path\Extentions.txt" 
-
 #ForEach loop starts here
-ForEach ($line in $Extentions) {
+ForEach ($l in $Files_array) {
 
-$content = Get-ChildItem -Path $path -Filter *.$line -Recurse -Exclude $Exclutions
+$content = Get-ChildItem -Path $path -Filter *.$l -Recurse -Exclude $Exclutions
 $count = $content.Count
 $number = ($count.ToString("####")).PadLeft(6)
 
 try {
 if ($content -ne $null) { 
-#write-host "Count: | FileType           | Export Path" -foregroundcolor "green"
-write-host "$number | .$line files found. | $path\Output\$line"_files".csv" -foregroundcolor "green"
-$content.VersionInfo |select Filename | Export-Csv -Path $path\Output\$line"_files".csv
-sleep 1
+write-host "$number | .$line files found. | $output\$l"_files".csv" -foregroundcolor "green"
+$content.VersionInfo |select Filename | Export-Csv -Path $output\$l"_files.csv"
 }    
 else {
-write-host "$number | .$line files found. | $pwd\Output\$line"_files".csv" -foregroundcolor "magenta"
-#Write-host "0 files found for filetype .$line" -foregroundcolor "magenta"
-sleep 1
-}
-
+write-host "$number | .$line files found. | $output\$l"_files".csv" -foregroundcolor "magenta"
+    }
 }
 
 Catch
@@ -136,6 +173,7 @@ Catch
 }
 
 #Error logging
-Add-content Output\Errors.log "$Error `r`n"
+Add-content $output\Errors.log "$Error `r`n"
 $ErrorCount = $Error.Count
-Write-host "$ErrorCount Errors found and logged in Output\Errors.log" -ForegroundColor Red
+
+Write-host "$ErrorCount Errors found and logged in $output\Errors.log" -ForegroundColor Red

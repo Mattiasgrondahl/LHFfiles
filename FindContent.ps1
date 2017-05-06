@@ -21,6 +21,7 @@ Checks the following.
 
 .EXAMPLE 
 
+.\FindContent.ps1 -Path C:\temp\LHFfiles\Output
 .\FindContent.ps1 
 
 #>
@@ -37,12 +38,21 @@ Param(
    [string]$exclude
 )
 
-$path = "C:\temp\Output"
+if ($path -eq "") {
+#$path = Read-Host "Enter the Root to search:"
+Write-host "No Path defined, using current directory $pwd" -ForegroundColor DarkYellow
+#set path to current directory
+$path = pwd
+}
+else {
+Write-host "Using Path: $path" -ForegroundColor DarkYellow
+}
+
 #Suppress Errors (set to Continue to show errors on run)
 $ErrorActionPreference = "SilentlyContinue"
 
 #TODO path must be defnied with parameter
-$listoffiles = Get-Content -Path "$path\txt_files.csv"
+$listoffiles = Get-Content -Path "$path\Output\txt_files.csv"
 
 #$output_file = "$path\ContentFound.txt"
 
@@ -65,16 +75,16 @@ $input_path = $line -replace '["]',''
 
 #Find Ip
 $search_ip = select-string -Path $input_path -Pattern $ip_regex -AllMatches | % { $_.Matches } | % { $_.Value} 
-Add-Content  $path\ip.txt $search_ip`r`n
+Add-Content  $path\Output\ip.txt $search_ip`r`n
 #Find URL
 $search_url = select-string -Path $input_path -Pattern $url_regex -AllMatches | % { $_.Matches } | % { $_.Value} 
-Add-Content  $path\url.txt $search_url `r`n
+Add-Content  $path\Output\url.txt $search_url `r`n
 
 #Find Personnr
 $search_personnr = select-string -Path $input_path -Pattern $personnr -AllMatches | % { $_.Matches } | % { $_.Value} 
 Add-Content  $path\Output\personnr.txt $search_personnr `r`n
 #Find Password
 $search_password = select-string -Path $input_path -Pattern "password", "lösenord", "pinkod"
-Add-Content  $path\passwords.txt $search_password `r`n
+Add-Content  $path\Output\passwords.txt $search_password `r`n
 #$search_password > $path\passwords.txt
 }
