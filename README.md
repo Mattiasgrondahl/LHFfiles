@@ -1,6 +1,6 @@
 # Low Hanging Fruit 
-Low Hanging Fruit - A Collection of script to make a pentesters life easier.
-This is a work in progress and some stuff might now work.
+Low Hanging Fruit - My collection of scripts to make my life easier.
+This is a work in progress and some stuff might not work.
 
 *Findfiles.ps1 will search through a mapped drive for files that might contain passwords or other relevant information and export them to a CSV for later inspection. It will seach through each .filetype found and look for ip, url, passwords etc.
 
