@@ -26,9 +26,13 @@ Performs the following task
         Enter where to output the results
         Example: ./findfiles.ps1 -output C:\temp\output
 
-    -exlude
+    -exclude
         Enter exputions for the search
         Example ./findfiles.ps1 -exclude "*readme* *manifest*" 
+
+    -filestypes
+        Enter spesific files type to search
+        Example ./findfiles.ps1 -filetypes "dat" 
 
 .EXAMPLE 
 
@@ -39,7 +43,7 @@ Performs the following task
 .\FindFiles.ps1 -list drives
 
 #Specific file type search
-.\FindFiles.ps1 -filetypes "txt"
+.\FindFiles.ps1 -path C:\temp -output C:\temp\output -filetypes "dat"
 
 #Run the script interactive and ask for parameters
 .\FindContent.ps1 
@@ -86,7 +90,7 @@ Help
 
 
 #If -type
-#if ($filetypes -eq "") {
+if ($filetypes -eq "") {
 #Define Array with filetypes
 $Files_array = @("txt",
                      "bak",
@@ -109,20 +113,21 @@ $Files_array = @("txt",
                      "xml",
                      "csv",
                      "key",
-                     "bkf")
-#}
-#else {
+                     "bkf",
+                     "dat")
+}
+else {
 
 #Write-host "else"
 #$filetypes = "bkf one config"
 
 #$Files_array[2]
 #Add new lines
-#$filetypes = ($filetypes -split '\s') |? {$_}
+$filetypes = ($filetypes -split '\s') |? {$_}
 #Takes -filetypes input and convert it to an array
-#$Files_array = @($filetypes)
-#Write-host "you've input filtypes $Files_array"
-#    }
+$Files_array = @($filetypes)
+Write-host "you've input filtypes $Files_array"
+    }
 
 
 #If -list drives
@@ -225,23 +230,18 @@ Write-host "$ErrorCount Errors found and logged in $output\Errors.log" -Foregrou
 
 #################
 
+#Merge from content script
+
 sleep 5
 
 Write-host "###################################################" -ForegroundColor DarkYellow
 Write-host "#                                                 #" -ForegroundColor DarkYellow
-Write-host "#                   Searching                     #" -ForegroundColor DarkYellow
+Write-host "#              Search through content             #" -ForegroundColor DarkYellow
 Write-host "#                                                 #" -ForegroundColor DarkYellow
 Write-host "###################################################" -ForegroundColor DarkYellow
 
 
 #Confirm to performe search in content
-$confirm = Read-host "Do you want to continue to search through the found files? Y/N"
-    if ( $confirm -ne "Y" ) { exit }
-
-
-#Merge from content script
-
-#TODO path must be defnied with parameter
 $confirm = Read-host "Do you want to continue to search through the found files? Y/N"
     if ( $confirm -ne "Y" ) { exit }
 
