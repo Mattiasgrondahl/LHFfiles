@@ -12,9 +12,9 @@ Performs the following task
             
 .NOTES
 
-        Author: Mattias Gröndahl  Date  : April 30, 2017   
+        Author: Mattias GrÃ¶ndahl  Date  : April 30, 2017   
 
-        This script is to make it easier to identify intressting files during a pentest that might holöd sensitive data like passwords or PII information.
+        This script is to make it easier to identify intressting files during a pentest that might holÃ¶d sensitive data like passwords or PII information.
 
 .PARAMETERS
 
@@ -106,7 +106,7 @@ $Files_array = @("txt",
                      "vmdk",
                      "p12",
                      "pfx",
-                     "rdg",
+                     "rdp",
                      "config",
                      "sql",
                      "msg",
@@ -134,7 +134,7 @@ Write-host "you've input filtypes $Files_array"
 if ($list -eq "drives") {
 #Get Drives
 Write-Host "Detecting Drives" -ForegroundColor DarkYellow
-$drive = get-psdrive -PSProvider filesystem | select Root, @{Name="UsedGB";Expression={[math]::round($_.used/1gb,2)}}, @{Name="FreeGB";Expression={[math]::round($_.free/1gb,2)}}, @{Name="PctFree";expression={$_.free/($_.free+$_.used)*100 –as [int]}} -Wait
+$drive = get-psdrive -PSProvider filesystem | select Root, @{Name="UsedGB";Expression={[math]::round($_.used/1gb,2)}}, @{Name="FreeGB";Expression={[math]::round($_.free/1gb,2)}}, @{Name="PctFree";expression={$_.free/($_.free+$_.used)*100 -as [int]}} -Wait
 sleep 3
 Write-host $drive.Count "drives found"
 $drive
@@ -277,7 +277,7 @@ Add-Content  $output\url.txt $search_url
 $search_personnr = select-string -Path $input_path -Pattern $personnr -AllMatches | % { $_.Matches } | % { $_.Value} 
 Add-Content  $output\personnr.txt $search_personnr
 #Find Password
-$search_password = select-string -Path $input_path -Pattern "password", "lösenord", "pinkod", "pass", "user"
+$search_password = select-string -Path $input_path -Pattern "password", "lÃ¶senord", "pinkod", "pass", "user"
 Add-Content  $output\passwords.txt $search_password
 }
 
