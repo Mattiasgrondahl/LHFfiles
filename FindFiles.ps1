@@ -12,9 +12,9 @@ Performs the following task
             
 .NOTES
 
-        Author: Mattias Gröndahl  Date  : April 30, 2017   
+        Author: Mattias Grondahl  Date  : April 30, 2017   
 
-        This script is to make it easier to identify intressting files during a pentest that might holöd sensitive data like passwords or PII information.
+        This script is to make it easier to identify intressting files during a pentest that might hold sensitive data like passwords or PII information.
 
 .PARAMETERS
 
